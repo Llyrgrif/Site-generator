@@ -11,27 +11,23 @@ def main():
 
 
 def recursive_copy(source_dir, dest_dir):
-	#destination = dest_dir
-	tree = []
-	print(f"Processing: {source_dir}")
-	if os.path.isfile(source_dir) == True:
-		tree.append(source_dir)
-		print(f"Appended file 2: {source_dir}")
-		return tree
-	else:
-		source = os.listdir(source_dir)
-		for files in source:
-			path = f"{source_dir}/{files}"
-			print(f"Looking at: {path}")
-			if os.path.isfile(files) == True:
-				return tree
-			else:
-				tree.append(files)
-				print(f"Appended: {files}")
-				result = recursive_copy(path)
-				print(f"Recursive result: {result}")
-				tree.extend(result)
-		return tree
+	if os.path.exists(dest_dir):
+    	shutil.rmtree(dest_dir)
+
+    os.makedirs(dest_dir)
+
+	items = os.listdir(source_dir)
+    
+    for item in items:
+        source_path = os.path.join(source_dir, item)
+        dest_path = os.path.join(dest_dir, item)
+        
+        if os.path.isfile(source_path):
+            shutil.copy(source_path, dest_path)
+            print(f"Copied: {source_path} to {dest_path}")
+        else:
+            os.makedirs(dest_path, exist_ok=True)
+            recursive_copy(source_path, dest_path)
 
 if __name__ == "__main__":
 	main()
