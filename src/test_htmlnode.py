@@ -1,4 +1,5 @@
 import unittest
+from main import *
 from htmlnode import *
 from textnode import *
 from blocks import *
@@ -165,5 +166,9 @@ the **same** even with inline stuff
             html,
         "<div><pre><code>This is text that _should_ remain\nthe **same** even with inline stuff\n</code></pre></div>",
             )
+      
+      def test_extract_title(self):
+         title = extract_title("# Tolkien Fan Club")
+         self.assertEqual(title,"Tolkien Fan Club")
          
          

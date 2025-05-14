@@ -1,5 +1,6 @@
 from enum import Enum
 from htmlnode import *
+from textnode import *
 import re
 
 def markdown_to_blocks(markdown):
@@ -53,7 +54,7 @@ def  markdown_to_html_node(markdown):
         if block_type == BlockType.CODE:
             pre_node, code_node = create_htmlnode(block_type, block)
             code_content = extract_code_content(block)
-            text_node = TextNode(code_content, "text")
+            text_node = TextNode(code_content, TextType.TEXT)
             html_node = text_node_to_html_node(text_node) 
             code_node.children = [html_node]
             all_nodes.append(pre_node)
@@ -67,7 +68,7 @@ def  markdown_to_html_node(markdown):
 def create_htmlnode(block_type, block_text):
     tag_dict = {
         BlockType.PARAGRAPH: "p",
-        BlockType.HEADING: "",
+        BlockType.HEADING: "#",
         BlockType.CODE: ("pre", "code"),
         BlockType.QUOTE: "blockquote",
         BlockType.UNORDERED_LIST: "ul",
@@ -76,25 +77,42 @@ def create_htmlnode(block_type, block_text):
     
     if block_type in tag_dict:
         tag = tag_dict[block_type]
-        if block_type == "heading":
+        if block_type == BlockType.HEADING:
             type_of_heading = re.findall("#", block_text)
             tag = f"h{len(type_of_heading)}"
-        elif block_type == "code":
-            code_node = HTMLNode(tag_dict["code"][1], None, None, None)
-            pre_node = HTMLNode(tag_dict["code"][0], None, [code_node], None)
+        elif block_type == BlockType.CODE:
+            code_node = HTMLNode(tag_dict[BlockType.CODE][1], None, None, None)
+            pre_node = HTMLNode(tag_dict[BlockType.CODE][0], None, [code_node], None)
             return pre_node, code_node
-        node = HTMLNode(tag, None, None, None)
-        return node
+        return HTMLNode(tag, None, None, None)
+
 
 def text_to_children(block):
+    block_type = block_to_block_type(block)
     processed_block = block
-    if block_to_block_type(block) == "heading":
+    if block_type == BlockType.UNORDERED_LIST or block_type == BlockType.ORDERED_LIST:
+
+        lines = block.split("\n")
+        list_items = []
+        for line in lines:
+
+            if block_type == BlockType.UNORDERED_LIST:
+                item_text = re.sub(r'^-\s+', '', line)
+            else: 
+                item_text = re.sub(r'^\d+\.\s+', '', line)
+
+            item_text_nodes = text_to_textnodes(item_text)
+            item_html_nodes = [text_node_to_html_node(node) for node in item_text_nodes]
+
+            li_node = HTMLNode("li", None, item_html_nodes, None)
+            list_items.append(li_node)
+            
+        return list_items
+    
+    elif block_to_block_type(block) == BlockType.HEADING:
         text = re.sub(r'^#+\s+', '', processed_block)
-    elif block_to_block_type(block) == "unordered_list":
-        text = re.sub(r'^-\s+', '', processed_block)
-    elif block_to_block_type(block) == "ordered_list":
-        text = re.sub(r'^\d+\.\s+', '', processed_block)
-    elif block_to_block_type(block) == "quote":
+
+    elif block_to_block_type(block) == BlockType.QUOTE:
         text = re.sub(r'^>\s+', '', processed_block)
     else:
         text = processed_block

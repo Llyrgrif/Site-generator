@@ -56,6 +56,8 @@ class LeafNode(HTMLNode):
              return self.value
          elif self.tag == "a":
              return f"<{self.tag}{self.props_to_html()}>{self.value}</{self.tag}>"
+         elif self.tag == "img":
+             return f"<{self.tag}{self.props_to_html()}>"
          return f"<{self.tag}>{self.value}</{self.tag}>"
 
 class ParentNode(HTMLNode):
