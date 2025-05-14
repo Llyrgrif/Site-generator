@@ -14,7 +14,7 @@ else:
 def main():
     node = TextNode("This is some anchor text", TextType.LINK, "https://www.boot.dev")
     recursive_copy("static", "docs")
-    generate_pages_recursive("content", "template.html", "docs")
+    generate_pages_recursive("content", "template.html", "docs", basepath)
 
     #print(node)
 
@@ -48,7 +48,7 @@ def extract_title(markdown):
 	else:
 		raise Exception("Isn't a h1 title")
 	
-def generate_page(from_path, template_path, dest_path):
+def generate_page(from_path, template_path, dest_path, basepath):
 	print(f"Generating a page from {from_path} to {dest_path} using {template_path}")
 	with open(from_path, "r") as markdown_file:
 		markdown_content = markdown_file.read()
@@ -68,10 +68,10 @@ def generate_page(from_path, template_path, dest_path):
 	with open(dest_path, "w") as f:
 		f.write(replaced_src)
 
-def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, basepath):
 
 	if os.path.isfile(dir_path_content):
-		generate_page(dir_path_content, template_path, dest_dir_path)
+		generate_page(dir_path_content, template_path, dest_dir_path, basepath)
 	else:
 		files = os.listdir(dir_path_content)
 		for file in files:
@@ -79,7 +79,7 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
 			dest_path = os.path.join(dest_dir_path, file)
 			replaced_dest = dest_path.replace(".md", ".html")
 
-			new_path = generate_pages_recursive(source_path, template_path, replaced_dest)
+			new_path = generate_pages_recursive(source_path, template_path, replaced_dest, basepath)
 
 	#generate_page(entry, template_path, dest_dir_path)
 
