@@ -6,8 +6,11 @@ import re
 import shutil
 import sys
 
-basepath = sys.argv[1]
-
+if len(sys.argv) > 1:
+	basepath = '/'
+else:
+	basepath = sys.argv[1]
+	
 def main():
     node = TextNode("This is some anchor text", TextType.LINK, "https://www.boot.dev")
     recursive_copy("static", "docs")
