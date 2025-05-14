@@ -6,7 +6,7 @@ import re
 import shutil
 import sys
 
-basepath = sys.argv[0]
+basepath = sys.argv[1]
 
 def main():
     node = TextNode("This is some anchor text", TextType.LINK, "https://www.boot.dev")
