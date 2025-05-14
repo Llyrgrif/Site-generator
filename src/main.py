@@ -9,9 +9,12 @@ import sys
 <<<<<<< HEAD
 =======
 
+<<<<<<< HEAD
 >>>>>>> 46eb710 (Debugging)
 
 	
+=======
+>>>>>>> 8286df0 (Debugging 1)
 def main():
 <<<<<<< HEAD
     if len(sys.argv) > 1:
