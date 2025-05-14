@@ -7,9 +7,9 @@ import shutil
 import sys
 
 if len(sys.argv) > 1:
-	basepath = '/'
-else:
 	basepath = sys.argv[1]
+else:
+	basepath = '/'
 	
 def main():
     node = TextNode("This is some anchor text", TextType.LINK, "https://www.boot.dev")
