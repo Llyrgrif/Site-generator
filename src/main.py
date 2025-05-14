@@ -10,11 +10,8 @@ basepath = sys.argv[0]
 
 def main():
     node = TextNode("This is some anchor text", TextType.LINK, "https://www.boot.dev")
-    recursive_copy("static", "public")
-    generate_pages_recursive("content", "template.html", "public")
-    nodes = text_to_textnodes("This is magic! ![hat](wizard.png) More text after.")
-    for node in nodes:
-        print("type:", node.text_type, "text:", node.text, "url:", node.url)
+    recursive_copy("static", "docs")
+    generate_pages_recursive("content", "template.html", "docs")
 
     #print(node)
 
